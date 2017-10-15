@@ -1,0 +1,38 @@
+#!/bin/bash
+#set -v -x	
+#uplloc="/path/to/upload.py"
+
+if [ ! -d "$HOME"/_output/ ]; then
+	mkdir "$HOME"/_output
+fi
+
+if [ -d "$1" ]; then
+	echo "$1 is a folder"
+	dir+=("$1")
+	else
+	echo "$1 is not a folder, please giff me folder"
+fi
+
+for i in "$1"/*; do
+	#test=$(mediainfo --Inform="General;%Duration/String3%" "$i")
+	if [ ! -d "$i" ]; then
+		echo "Found $i"
+		uvideo+=("$i")
+	fi
+done
+
+#echo "${uvideo[@]}"
+
+mkdir -p "$1"/screens
+
+for s in "${uvideo[@]}"; do
+	echo "Making screen for $s"
+	~/.mtn/mtn -f ~/.mtn/DroidSans-Bold.ttf -n -s 10 -c 3 -D 6 -b 0.6 -h 100 -r 15 -w 1600 -L 4:1 -j 90 -k 00008b -F FFFFFF:12 -o -O "$1"/screens/ -empblue.jpg "$s"
+done
+
+#for i in "$1"/screens/*; do
+#	S=("$(python $uplloc "$i)")
+#	Screens+=$( printf "[thumb]$S[/thumb]" )
+#done
+
+python3 "$HOME"/bin/py3createemptorrent.py -p 16000 -o "$HOME"/_output "$1"
